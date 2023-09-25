@@ -4,7 +4,7 @@ require("dotenv").config();
 const cors = require("cors");
 const { connection } = require("./config/db");
 // user
-const { userRouter } = require("./routes/user.routes");
+const { userrouter } = require("./routes/user.routes");
 // auth
 const { auth } = require("./middleware/auth.middleware");
 // Dash
@@ -13,7 +13,7 @@ const { dashRouter } = require("./routes/dashboard.route");
 app.use(cors());
 app.use(express.json());
 // user
-app.use("/users", userRouter);
+app.use("/users", userrouter);
 
 app.use(auth);
 // Dash

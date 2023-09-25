@@ -1,57 +1,56 @@
-const express = require("express");
+const { Router } = require("express");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 const {UserModel} = require("../models/user.model");
-const userRouter = express.Router();
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-require("dotenv").config();
+// const { UserModel } = require("../model/UserModel");
+// const { UserModel } = require("../model/UserModel");
+// const { UserModel } = require("../model/UserModel");
 
-userRouter.post('/signup', async (req, res) => {
-    const { email,password,confirm_password } = req.body;
-  
-    try {
-      const user = await UserModel.findOne({ email });
-  
-      if (user) {
-        res.send('User already exists.');
-      } else {
-        if (password !== confirm_password) {
-          res.send('Passwords do not match.');
+const userrouter = Router();
+
+userrouter.get("/", (req, res) => {
+  res.send("hi");
+});
+
+userrouter.post("/signup", async (req, res) => {
+  const { email,password,confirm_password } = req.body;
+  try {
+    bcrypt.hash(password, 5, async (err, hash) => {
+      // Store hash in your passwordword DB.
+      const userer = new UserModel({ email,confirm_password,password: hash });
+      await userer.save();
+      res.send({ msg: "new user registered" });
+    });
+  } catch (error) {
+    res.send(error);
+  }
+});
+userrouter.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const user = await UserModel.findOne({ email });
+    if (user) {
+      bcrypt.compare(password, user.password, (err, result) => {
+        if (result) {
+          // console.log(user)
+          const token = jwt.sign({ authorid: user._id }, "masai");
+          
+          const email=user.email
+
+          res.status(200).send({ msg: "login successfull", token: token,email });
         } else {
-          bcrypt.hash(password, 5, async (err, hash) => {
-            if (err) {
-              res.send({ err: err.message });
-            } else {
-              const newUser = new UserModel({ email, password: hash,confirm_password });
-              await newUser.save();
-              res.send('User registered successfully!');
-            }
-          });
+          res.status(200).send({ msg: "wrong" });
         }
-      }
-    } catch (err) {
-      res.send({ msg: err.message });
+        // result == false
+      });
+    } else {
+      res.status(200).send({ msg: "wrong" });
     }
-  });
+  } catch (error) {
+    res.status(400).send(error);
+  }
+});
 
-userRouter.post("/login",async(req,res)=>{
-   const{email,password}=req.body;
-   try{
-       const user= await UserModel.findOne({email});
-       if(user){
-           bcrypt.compare(password,user.password,(err, result)=> {
-                if(result){
-                   res.send({"msg":"Login Successfull !!","token":jwt.sign({"userID":user._id}, "masai")});
-                }else{
-                   res.send("Wrong Credentials !!");
-                }
-           });
-       }else{
-           res.send("Please Register First !!");
-       }
-   }catch(err){
-       res.send({"msg":err.message});
-   }
-})
-
-
-module.exports={userRouter}
+module.exports = {
+  userrouter,
+};
