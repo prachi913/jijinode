@@ -6,7 +6,7 @@ dashRouter.post("/employees",async(req,res)=>{
     const payload=req.body;
     try{
        await DashModel.insertMany(payload);
-       res.send("Data is added");
+       res.send(payload);
     }catch(err){
        res.send({"msg":err.message});
     }

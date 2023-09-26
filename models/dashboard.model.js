@@ -6,6 +6,7 @@ const dashSchema = mongoose.Schema({
     email:{type:String,required:true},
     department:{type:String ,enum:["Tech", "Marketing", "Operations"],require:true},
     salary:{type:Number,required:true},
+//    id:{type:Number,required:true}
 },{
     versionKey:false
 })
