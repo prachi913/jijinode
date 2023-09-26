@@ -12,14 +12,33 @@ dashRouter.post("/employees",async(req,res)=>{
     }
 })
 
-dashRouter.patch("/update/:id",async(req,res)=>{
-    const{id}=req.params;
-    try{
-       await DashModel.findByIdAndUpdate({_id:id},req.body);
-       res.send("Data is updated");
-    }catch(err){
-        res.send({"msg":err.message});
-    }
+dashRouter.patch("/employees/:id",async(req,res)=>{
+     const{id}=req.params;
+     try {
+          const updatedBlog = await DashModel.findByIdAndUpdate(
+          //     req.params.id,
+          //     { $addToSet: { likes: req.userID } },
+          {_id:id},req.body,
+          //     { new: true }
+          );
+          if (!updatedBlog) {
+              return res.status(404).json({ message: "Blog not found" });
+          }
+          res.json({ updatedBlog });
+          // res.send(updatedBlog);
+      } catch (error) {
+          res.status(500).json({ error: error.message });
+          console.log(error)
+      }
+
+
+//     const{id}=req.params;
+//     try{
+//        await DashModel.findByIdAndUpdate({_id:id},req.body);
+//        res.send("Data is updated");
+//     }catch(err){
+//         res.send({"msg":err.message});
+//     }
 })
 
 dashRouter.delete("/delete/:id",async(req,res)=>{
