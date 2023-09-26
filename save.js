@@ -15,7 +15,7 @@ app.use(express.json());
 // user
 app.use("/users", userrouter);
 
-app.use(auth);
+// app.use(auth);
 // Dash
 app.use("/employees", dashRouter);
 
