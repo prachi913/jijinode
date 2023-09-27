@@ -9,7 +9,7 @@ const {UserModel} = require("../models/user.model");
 const userrouter = Router();
 
 userrouter.get("/", (req, res) => {
-  res.send("hi");
+  res.send("please login");
 });
 
 userrouter.post("/signup", async (req, res) => {
