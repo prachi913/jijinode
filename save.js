@@ -12,6 +12,9 @@ const { dashRouter } = require("./routes/dashboard.route");
 
 app.use(cors());
 app.use(express.json());
+app.get("/", (req, res) => {
+     res.send("please login");
+   });
 // user
 app.use("/users", userrouter);
 
@@ -22,6 +25,7 @@ app.use("/employees", dashRouter);
 app.listen(process.env.port, async () => {
     try {
         await connection
+        
         console.log(`Server is running at port ${process.env.port}`);
         console.log("Connected to DB");
     } catch (error) {

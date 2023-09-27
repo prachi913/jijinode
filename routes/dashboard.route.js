@@ -24,8 +24,10 @@ dashRouter.patch("/employees/:id",async(req,res)=>{
           if (!updatedBlog) {
               return res.status(404).json({ message: "Blog not found" });
           }
-          res.json({ updatedBlog });
-          // res.send(updatedBlog);
+        res.json({ updatedBlog });
+          // const data=await DashModel.find(updatedBlog)
+        
+          // res.send(j);
       } catch (error) {
           res.status(500).json({ error: error.message });
           console.log(error)
